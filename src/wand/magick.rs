@@ -265,6 +265,18 @@ impl MagickWand {
         }
     }
 
+    pub fn evaluate(
+        &self,
+        operator: bindings::MagickEvaluateOperator,
+        value: f64,
+    ) -> Result<(), &'static str> {
+        let result = unsafe { bindings::MagickEvaluateImage(self.wand, operator, value) };
+        match result {
+            bindings::MagickBooleanType_MagickTrue => Ok(()),
+            _ => Err("failed to evaluate image"),
+        }
+    }
+
     // Level an image. Black and white points are multiplied with QuantumRange to
     // decrease dependencies on the end user.
     pub fn level_image(
