@@ -270,7 +270,9 @@ impl MagickWand {
         operator: bindings::MagickEvaluateOperator,
         value: f64,
     ) -> Result<(), &'static str> {
-        let result = unsafe { bindings::MagickEvaluateImage(self.wand, operator, value) };
+        let result = unsafe {
+            bindings::MagickEvaluateImage(self.wand, operator, value * bindings::QuantumRange)
+        };
         match result {
             bindings::MagickBooleanType_MagickTrue => Ok(()),
             _ => Err("failed to evaluate image"),
