@@ -265,6 +265,18 @@ impl MagickWand {
         }
     }
 
+    pub fn set_image_channel_mask(
+        &self,
+        channel: bindings::ChannelType,
+    ) -> Result<bindings::ChannelType, &str> {
+        let result = unsafe { bindings::MagickSetImageChannelMask(self.wand, channel) };
+        if result == bindings::ChannelType_UndefinedChannel {
+            Err("failed to set image channel mask")
+        } else {
+            Ok(result)
+        }
+    }
+
     pub fn evaluate(
         &self,
         operator: bindings::MagickEvaluateOperator,
