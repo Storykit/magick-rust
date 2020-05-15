@@ -22,6 +22,9 @@ macro_rules! wand_common {
             pub wand: *mut ::bindings::$wand,
         }
 
+        unsafe impl Send for $wand {}
+        unsafe impl Sync for $wand {}
+
         impl $wand {
             pub fn new() -> Self {
                 $wand {
@@ -154,7 +157,7 @@ macro_rules! string_get {
                 Ok(result)
             }
         }
-    }
+    };
 }
 
 macro_rules! string_set_get {
