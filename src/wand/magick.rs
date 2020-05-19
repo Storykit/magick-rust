@@ -759,6 +759,29 @@ impl MagickWand {
         Ok(bytes)
     }
 
+    pub fn distort<T: AsRef<[f64]>>(
+        &mut self,
+        method: bindings::DistortMethod,
+        method_arguments: T,
+        bestfit: bool,
+    ) -> Result<(), &'static str> {
+        let arguments = method_arguments.as_ref();
+        let number_arguments: size_t = arguments.len();
+        let result = unsafe {
+            bindings::MagickDistortImage(
+                self.wand,
+                method,
+                number_arguments as size_t,
+                arguments.as_ptr(),
+                bestfit.to_magick(),
+            )
+        };
+        match result {
+            bindings::MagickBooleanType_MagickTrue => Ok(()),
+            _ => Err("failed to distort image"),
+        }
+    }
+
     mutations!(
         /// Set the image colorspace, transforming (unlike `set_image_colorspace`) image data in
         /// the process.
