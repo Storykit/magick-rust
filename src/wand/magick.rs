@@ -782,6 +782,25 @@ impl MagickWand {
         }
     }
 
+    pub fn set_image_matte_color(&mut self, matte: &PixelWand) -> Result<(), &'static str> {
+        let result = unsafe { bindings::MagickSetImageMatteColor(self.wand, matte.wand) };
+        match result {
+            bindings::MagickBooleanType_MagickTrue => Ok(()),
+            _ => Err("failed to set image matte color"),
+        }
+    }
+
+    pub fn set_image_virtual_pixel_method(
+        &mut self,
+        method: bindings::VirtualPixelMethod,
+    ) -> Result<(), &'static str> {
+        let result = unsafe { bindings::MagickSetImageVirtualPixelMethod(self.wand, method) };
+        match result {
+            bindings::MagickBooleanType_MagickTrue => Ok(()),
+            _ => Err("failed to set image virtual pixel method"),
+        }
+    }
+
     mutations!(
         /// Set the image colorspace, transforming (unlike `set_image_colorspace`) image data in
         /// the process.
