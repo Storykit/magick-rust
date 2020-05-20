@@ -790,15 +790,8 @@ impl MagickWand {
         }
     }
 
-    pub fn set_image_virtual_pixel_method(
-        &mut self,
-        method: bindings::VirtualPixelMethod,
-    ) -> Result<(), &'static str> {
-        let result = unsafe { bindings::MagickSetImageVirtualPixelMethod(self.wand, method) };
-        match result {
-            bindings::MagickBooleanType_MagickTrue => Ok(()),
-            _ => Err("failed to set image virtual pixel method"),
-        }
+    pub fn set_image_virtual_pixel_method(&mut self, method: bindings::VirtualPixelMethod) {
+        unsafe { bindings::MagickSetImageVirtualPixelMethod(self.wand, method) };
     }
 
     mutations!(
