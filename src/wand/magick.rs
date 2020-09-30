@@ -181,6 +181,36 @@ impl MagickWand {
         }
     }
 
+    pub fn import_image_pixels<T: AsRef<[u8]>>(
+        &self,
+        x: isize,
+        y: isize,
+        columns: usize,
+        rows: usize,
+        map: &str,
+        storage: bindings::StorageType,
+        pixels: T,
+    ) -> Result<(), &'static str> {
+        let pointer = pixels.as_ref();
+        let c_map = CString::new(map).unwrap();
+        let result = unsafe {
+            bindings::MagickImportImagePixels(
+                self.wand,
+                x,
+                y,
+                columns,
+                rows,
+                c_map.as_ptr(),
+                storage,
+                pointer.as_ptr() as *const c_void,
+            )
+        };
+        match result {
+            bindings::MagickBooleanType_MagickTrue => Ok(()),
+            _ => Err("Failed to import image pixels"),
+        }
+    }
+
     /// Compare two images and return tuple `(distortion, diffImage)`
     /// `diffImage` is `None` if `distortion == 0`
     pub fn compare_images(
