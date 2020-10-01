@@ -625,6 +625,7 @@ impl MagickWand {
         width: usize,
         height: usize,
         map: &str,
+        storage: bindings::StorageType,
     ) -> Option<Vec<u8>> {
         let c_map = CString::new(map).unwrap();
         let capacity = width * height * map.len();
@@ -639,7 +640,7 @@ impl MagickWand {
                 width,
                 height,
                 c_map.as_ptr(),
-                bindings::StorageType_CharPixel,
+                storage,
                 pixels.as_mut_ptr() as *mut c_void,
             ) == bindings::MagickBooleanType_MagickTrue
             {
